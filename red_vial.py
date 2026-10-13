@@ -17,10 +17,11 @@ def cargar_red(ruta_osm):
         "vias_validas": 0,
         "excluidas_no_vehicular": 0,
         "excluidas_restringido": 0,
-        "excluidas_incompletas": 0
+        "excluidas_incompletas": 0,
+        "con_sentido": 0,
+        "bidireccionales": 0
     }
 
-    # --- 1. RECOLECTAR NODOS ---
     
     for evento, elemento in ET.iterparse(ruta_osm, events=("end",)):
         if elemento.tag == "node":
@@ -33,7 +34,6 @@ def cargar_red(ruta_osm):
         elif elemento.tag == "way":
             elemento.clear()
 
-    # --- 2. FILTRAR Y ARMAR CALLES ---
     
     for evento, elemento in ET.iterparse(ruta_osm, events=("end",)):
         if elemento.tag == "way":
@@ -57,15 +57,20 @@ def cargar_red(ruta_osm):
 
             refs = [int(nd.attrib["ref"]) for nd in elemento.findall("nd")]
 
-            # descartar si faltan nodos o la calle es muy corta
             if len(refs) < 2 or any(r not in coordenadas for r in refs):
                 stats["excluidas_incompletas"] += 1
                 elemento.clear()
                 continue
 
-            # revisar sentido (oneway)
-            if tags.get("oneway", "").strip() == "-1":
+
+            oneway = tags.get("oneway", "").strip()
+            if oneway == "-1":
                 refs.reverse()
+                stats["con_sentido"] += 1
+            elif oneway in ("yes", "1", "true"):
+                stats["con_sentido"] += 1
+            else:
+                stats["bidireccionales"] += 1
 
             via = ListaEnlazada(id_via=wid)
             for r in refs:
@@ -77,3 +82,17 @@ def cargar_red(ruta_osm):
             elemento.clear()
 
     return vias_finales, stats
+
+
+def crear_indice(vias):
+    indice = {}
+    for wid in sorted(vias):
+        actual = vias[wid].cabeza
+        while actual is not None:
+            nid = actual.id_nodo
+            if nid not in indice:
+                indice[nid] = []
+            if wid not in indice[nid]:
+                indice[nid].append(wid)
+            actual = actual.siguiente
+    return indice
