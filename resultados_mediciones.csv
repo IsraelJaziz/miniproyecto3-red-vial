@@ -1,0 +1,33 @@
+n,operacion,mediana_enlazada_ns,mediana_list_ns
+36,recorrido,1400,1200
+36,longitud,26600,28700
+36,insertar inicio,500,300
+36,insertar medio,800,300
+36,insertar final,500,200
+36,eliminar inicio,300,200
+36,eliminar medio,600,200
+36,eliminar final,1700,200
+1000,recorrido,36900,29600
+1000,longitud,726100,826600
+1000,insertar inicio,700,700
+1000,insertar medio,10600,700
+1000,insertar final,800,400
+1000,eliminar inicio,500,400
+1000,eliminar medio,10400,400
+1000,eliminar final,41500,200
+10000,recorrido,333000,280300
+10000,longitud,7338100,8262900
+10000,insertar inicio,1000,3900
+10000,insertar medio,117200,2300
+10000,insertar final,1100,500
+10000,eliminar inicio,1400,2100
+10000,eliminar medio,122300,1300
+10000,eliminar final,424900,300
+100000,recorrido,4365300,3298000
+100000,longitud,73099500,80669800
+100000,insertar inicio,3900,253500
+100000,insertar medio,1679900,216500
+100000,insertar final,4500,187600
+100000,eliminar inicio,3200,25000
+100000,eliminar medio,1531900,12800
+100000,eliminar final,4642300,500
