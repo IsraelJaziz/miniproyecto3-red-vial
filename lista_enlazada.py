@@ -25,7 +25,6 @@ class ListaEnlazada:
     def esta_vacia(self):
         return self.cabeza is None
 
-    # --- INSERCIONES ---
 
     def insertar_inicio(self, id_nodo, lat, lon):
         nuevo = Nodo(id_nodo, lat, lon)
@@ -58,15 +57,13 @@ class ListaEnlazada:
         else:
             nuevo = Nodo(id_nodo, lat, lon)
             actual = self.cabeza
-            # recorremos hasta llegar un nodo antes de la posicion
+
             for _ in range(indice - 1):
                 actual = actual.siguiente
             nuevo.siguiente = actual.siguiente
             actual.siguiente = nuevo
             self.longitud += 1
 
-
-    # --- ELIMINACIONES ---
 
     def eliminar_inicio(self):
         if self.esta_vacia():
@@ -145,8 +142,6 @@ class ListaEnlazada:
         return True
 
 
-    # --- INVERTIR ---
-
     def invertir(self):
         if self.longitud <= 1:
             return
@@ -156,7 +151,6 @@ class ListaEnlazada:
         self.cola = self.cabeza
 
         while actual is not None:
-            # guardamos referencia antes de romper la flecha
             sig_aux = actual.siguiente
             actual.siguiente = anterior
             anterior = actual
@@ -164,8 +158,6 @@ class ListaEnlazada:
 
         self.cabeza = anterior
 
-
-    # --- CALCULOS DE DISTANCIA ---
 
     def longitud_iterativa(self):
         if self.longitud < 2:
@@ -186,16 +178,14 @@ class ListaEnlazada:
         if self.longitud > (sys.getrecursionlimit() - 50):
             raise RecursionError("Demasiados nodos para usar recursion")
 
-        def _recorrer(nodo):
+        def _recorrer(nodo, acumulado):
             if nodo is None or nodo.siguiente is None:
-                return 0.0
+                return acumulado
             tramo = haversine(nodo.lat, nodo.lon, nodo.siguiente.lat, nodo.siguiente.lon)
-            return tramo + _recorrer(nodo.siguiente)
+            return _recorrer(nodo.siguiente, acumulado + tramo)
 
-        return _recorrer(self.cabeza)
+        return _recorrer(self.cabeza, 0.0)
 
-
-    # --- UTILIDADES ---
 
     def obtener_ids(self):
         ids = []
